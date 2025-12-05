@@ -19,14 +19,21 @@
         
         <h5 class="text-center mb-4">Masuk Sistem</h5>
 
-        <!-- Menampilkan Pesan Error jika ada -->
+        <!-- Alert Sukses (dari Register) -->
+        <?php if($this->session->flashdata('success')): ?>
+            <div class="alert alert-success">
+                <?= $this->session->flashdata('success'); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Alert Error -->
         <?php if($this->session->flashdata('error')): ?>
             <div class="alert alert-danger">
                 <?= $this->session->flashdata('error'); ?>
             </div>
         <?php endif; ?>
 
-        <form action="<?= base_url('auth/process') ?>" method="POST">
+        <form action="<?= base_url('auth/process_login') ?>" method="POST">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" name="username" required autofocus>
@@ -41,7 +48,8 @@
         </form>
         
         <div class="text-center mt-3">
-            <small class="text-muted">Belum punya akun? Hubungi Admin Dinas.</small>
+            <small class="text-muted">Belum punya akun?</small><br>
+            <a href="<?= base_url('auth/register') ?>" class="text-success fw-bold text-decoration-none">Daftar Sebagai Petani</a>
         </div>
     </div>
 
