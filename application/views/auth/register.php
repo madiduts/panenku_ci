@@ -19,9 +19,7 @@
         <h6 class="text-center text-muted mb-4">Bergabung bersama petani cerdas lainnya</h6>
 
         <?php if($this->session->flashdata('error')): ?>
-            <div class="alert alert-danger">
-                <?= $this->session->flashdata('error'); ?>
-            </div>
+            <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
         <?php endif; ?>
 
         <form action="<?= base_url('auth/process_register') ?>" method="POST">
@@ -40,6 +38,9 @@
                 <input type="password" class="form-control" id="password" name="password" minlength="6" required>
                 <div class="form-text">Minimal 6 karakter.</div>
             </div>
+
+            <!-- Hidden Input: Role otomatis Petani -->
+            <input type="hidden" name="role" value="petani">
 
             <div class="d-grid gap-2 mt-4">
                 <button type="submit" class="btn btn-success">Buat Akun Petani</button>

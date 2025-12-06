@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Panenku</title>
-    <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; height: 100vh; }
@@ -19,18 +18,12 @@
         
         <h5 class="text-center mb-4">Masuk Sistem</h5>
 
-        <!-- Alert Sukses (dari Register) -->
         <?php if($this->session->flashdata('success')): ?>
-            <div class="alert alert-success">
-                <?= $this->session->flashdata('success'); ?>
-            </div>
+            <div class="alert alert-success"><?= $this->session->flashdata('success'); ?></div>
         <?php endif; ?>
 
-        <!-- Alert Error -->
         <?php if($this->session->flashdata('error')): ?>
-            <div class="alert alert-danger">
-                <?= $this->session->flashdata('error'); ?>
-            </div>
+            <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
         <?php endif; ?>
 
         <form action="<?= base_url('auth/process_login') ?>" method="POST">
@@ -42,6 +35,16 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
+            
+            <!-- UPDATE: Tambahan Pilihan Role -->
+            <div class="mb-3">
+                <label for="role" class="form-label">Masuk Sebagai</label>
+                <select class="form-select" name="role" required>
+                    <option value="petani">Petani</option>
+                    <option value="dinas">Dinas Pertanian</option>
+                </select>
+            </div>
+
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success">Login</button>
             </div>

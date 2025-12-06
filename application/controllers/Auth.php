@@ -6,110 +6,106 @@ class Auth extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
-        // Load library yang wajib ada untuk login
-        $this->load->library('session');
+        $this->load->model('User_model');
         $this->load->library('form_validation');
-        $this->load->helper('url');
-        $this->load->model('Auth_model');
     }
 
-    // HALAMAN UTAMA (Bisa diakses lewat /auth atau /auth/login)
     public function index()
     {
-        $this->login(); // Lempar ke fungsi login biar satu pintu
-    }
-
-    // MENAMPILKAN HALAMAN LOGIN
-    public function login()
-    {
-        // Jika sudah login, tendang ke dashboard masing-masing
-        if ($this->session->userdata('user_id')) {
-            $role = $this->session->userdata('role');
-            if ($role == 'petani') redirect('petani');
-            else redirect('dinas'); 
+        // Halaman Login
+        if ($this->session->userdata('role')) {
+            $this->_redirect_user($this->session->userdata('role'));
         }
-
-        $this->load->view('login'); 
+        $this->load->view('auth/login');
     }
 
-    // PROSES LOGIN (Aksi dari Form)
+    public function register()
+    {
+        // Halaman Register
+        $this->load->view('auth/register');
+    }
+
     public function process_login()
     {
-        $username = $this->input->post('username', true);
+        $username = $this->input->post('username');
         $password = $this->input->post('password');
+        $role     = $this->input->post('role'); // Input dari dropdown
 
-        $user = $this->Auth_model->get_user_by_username($username);
+        // Cek user di database
+        $user = $this->User_model->get_user_by_username($username);
 
-        // 1. Cek User Ada?
         if ($user) {
-            // 2. Cek Password Benar? (Verify Hash)
-            if (password_verify($password, $user['password'])) {
-                // Password cocok! Buat Session.
-                $session_data = [
-                    'user_id'      => $user['id'], // Sesuaikan dengan nama kolom di database (id/user_id)
-                    'username'     => $user['username'],
-                    'nama_lengkap' => $user['full_name'],
-                    'role'         => $user['role'],
-                    'logged_in'    => TRUE
-                ];
-                $this->session->set_userdata($session_data);
+            // Verifikasi Password (menggunakan MD5 sederhana sesuai contoh database)
+            // Di production sebaiknya pakai password_verify()
+            if (md5($password) === $user['password']) {
+                
+                // Cek apakah role yang dipilih sesuai dengan database
+                if ($user['role'] === $role) {
+                    // Set Session
+                    $session_data = [
+                        'user_id'   => $user['id'],
+                        'username'  => $user['username'],
+                        'full_name' => $user['full_name'],
+                        'role'      => $user['role'],
+                        'logged_in' => TRUE
+                    ];
+                    $this->session->set_userdata($session_data);
 
-                // Redirect sesuai Role
-                if ($user['role'] == 'petani') {
-                    redirect('petani');
+                    // Redirect sesuai role
+                    $this->_redirect_user($role);
                 } else {
-                    redirect('dinas');
+                    $this->session->set_flashdata('error', 'Role tidak sesuai! Anda terdaftar sebagai ' . ucfirst($user['role']));
+                    redirect('auth');
                 }
 
             } else {
                 $this->session->set_flashdata('error', 'Password salah!');
-                redirect('auth/login');
+                redirect('auth');
             }
         } else {
-            $this->session->set_flashdata('error', 'Username tidak terdaftar!');
-            redirect('auth/login');
+            $this->session->set_flashdata('error', 'Username tidak ditemukan!');
+            redirect('auth');
         }
     }
 
-    // HALAMAN REGISTER
-    public function register()
-    {
-        $this->load->view('register');
-    }
-
-    // PROSES REGISTER
     public function process_register()
     {
-        $username = $this->input->post('username');
-        
-        // Cek username kembar
-        $existing_user = $this->Auth_model->get_user_by_username($username);
-        if ($existing_user) {
-            $this->session->set_flashdata('error', 'Username sudah dipakai! Cari yang lain.');
+        // Validasi input sederhana
+        $this->form_validation->set_rules('username', 'Username', 'required|is_unique[users.username]', [
+            'is_unique' => 'Username ini sudah terpakai!'
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
             redirect('auth/register');
-        }
-
-        // Siapkan data
-        $data = [
-            'full_name' => $this->input->post('full_name'),
-            'username'  => $username,
-            'password'  => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
-            'role'      => 'petani', // Default role
-            'created_at'=> date('Y-m-d H:i:s')
-        ];
-
-        if ($this->Auth_model->register_petani($data)) {
-            $this->session->set_flashdata('success', 'Akun berhasil dibuat! Silakan Login.');
-            redirect('auth/login');
         } else {
-            $this->session->set_flashdata('error', 'Gagal mendaftar. Coba lagi.');
-            redirect('auth/register');
+            // Data untuk disimpan
+            $data = [
+                'full_name' => $this->input->post('full_name'),
+                'username'  => $this->input->post('username'),
+                'password'  => md5($this->input->post('password')), // Encrypt MD5
+                'role'      => 'petani' // Default register hanya untuk petani
+            ];
+
+            $this->User_model->insert_user($data);
+            $this->session->set_flashdata('success', 'Registrasi berhasil! Silakan login.');
+            redirect('auth');
         }
     }
 
     public function logout()
     {
         $this->session->sess_destroy();
-        redirect('auth/login');
+        redirect('auth');
+    }
+
+    // Helper redirect private
+    private function _redirect_user($role)
+    {
+        if ($role === 'petani') {
+            redirect('petani'); // Mengarah ke Controllers/Petani.php
+        } elseif ($role === 'dinas') {
+            redirect('dinas');  // Mengarah ke Controllers/Dinas.php
+        }
     }
 }
