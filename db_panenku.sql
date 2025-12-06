@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Dec 04, 2025 at 05:39 AM
+-- Host: 127.0.0.1
+-- Generation Time: Dec 06, 2025 at 01:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -112,12 +112,21 @@ CREATE TABLE `siklus_tanam` (
 
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
-  `username` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `full_name` varchar(150) DEFAULT NULL,
   `role` enum('petani','dinas','admin') DEFAULT 'petani',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `email`, `password`, `full_name`, `role`, `created_at`) VALUES
+(1, 'tes', '$2y$10$vV8L4qCGUyO9Xdz9Z2XrD.Y4JuYVaqrJ9kyKHzjvS2G0a/08/xTD.', 'tes', 'petani', '2025-12-05 23:01:51'),
+(2, 'rzayyanr', '2fea6c02a98d6318d44cdf150775f07a', 'Zayyan', 'petani', '2025-12-06 09:32:43'),
+(3, 'Mahdi', '2fea6c02a98d6318d44cdf150775f07a', 'Mahdi', 'petani', '2025-12-06 09:34:09');
 
 --
 -- Indexes for dumped tables
@@ -215,7 +224,7 @@ ALTER TABLE `siklus_tanam`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
