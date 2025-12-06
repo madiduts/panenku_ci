@@ -138,4 +138,4 @@ $autoload['model'] = array();
 |  Auto-load Models
 | -------------------------------------------------------------------
 */
-$autoload['model'] = array('User_model');
+$autoload['model'] = array('');
