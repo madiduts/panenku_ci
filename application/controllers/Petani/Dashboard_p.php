@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Dashboard_p extends CI_Controller {
+class Petani extends CI_Controller {
 
     public function __construct()
     {
@@ -29,7 +29,7 @@ class Dashboard_p extends CI_Controller {
         $data['user'] = $this->user_data;
         $data['content'] = 'petani/dashboard'; // Memanggil view dashboard.php
 
-        // Data Mockup untuk Dashboard (Mirip data JS sebelumnya)
+        // Data Mockup untuk Dashboard (Mirip data JS sebelumnya)   
         $data['total_lahan'] = 8;
         $data['total_luas'] = 156;
         $data['total_lahan_aktif'] = 5;
