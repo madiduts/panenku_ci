@@ -17,12 +17,40 @@ class Dashboard extends CI_Controller {
         
         $data['title'] = 'Dashboard';
         $data['active_menu'] = 'dashboard';
-        $data['user'] = $this->_get_user_data(); // Helper private
+        $data['user'] = [
+            'name' => $this->session->userdata('full_name'), 
+            'role' => 'Petani',
+            'avatar' => 'default.jpg'
+        ];
 
-        // ... Logika hitung total lahan, luas, dll (Copy dari kode lamamu) ...
+        // 1. Hitung Total Lahan (Sudah Benar)
         $lahan_petani = $this->M_lahan->get_by_petani($user_id);
         $data['total_lahan'] = count($lahan_petani);
-        // ... dst ...
+
+        // 2. [PERBAIKAN] Hitung Total Luas (BAGIAN INI YANG HILANG)
+        // Kita panggil fungsi sum_luas_lahan di Model
+        $luas = $this->M_lahan->sum_luas_lahan($user_id);
+        
+        // Cek: Jika hasilnya NULL (belum ada lahan), set jadi 0
+        $data['total_luas'] = empty($luas) ? 0 : $luas;
+
+        // 3. Data Lahan Aktif untuk Widget (Sudah Benar)
+        $siklus_aktif = $this->M_siklus->get_active_siklus($user_id);
+        $data['total_lahan_aktif'] = count($siklus_aktif);
+        
+        // Mapping Lahan List untuk Widget Dashboard
+        $data['lahan_list'] = [];
+        foreach($siklus_aktif as $row) {
+             $persen = $this->_hitung_progress($row['tanggal_tanam'], $row['estimasi_panen']);
+             $data['lahan_list'][] = (object) [
+                'id' => $row['kategori_lahan'], 
+                'tanaman' => $row['nama_komoditas'],
+                'luas' => $row['luas_lahan'] . ' Ha',
+                'fase' => 'Masa Tanam', 
+                'progress' => $persen, 
+                'status' => 'Aktif'
+            ];
+        }
 
         $data['content'] = 'petani/dashboard'; 
         $this->load->view('petani/layout_petani', $data);
