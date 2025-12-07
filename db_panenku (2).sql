@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 06, 2025 at 04:17 PM
+-- Generation Time: Dec 07, 2025 at 02:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -128,10 +128,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `phone_number`, `password`, `full_name`, `address`, `role`, `is_active`, `avatar`, `created_at`) VALUES
-(1, 'tes', NULL, '$2y$10$vV8L4qCGUyO9Xdz9Z2XrD.Y4JuYVaqrJ9kyKHzjvS2G0a/08/xTD.', 'tes', NULL, 'petani', 1, 'default.jpg', '2025-12-05 23:01:51'),
-(2, 'rzayyanr', NULL, '2fea6c02a98d6318d44cdf150775f07a', 'Zayyan', NULL, 'petani', 1, 'default.jpg', '2025-12-06 09:32:43'),
-(3, 'Mahdi', NULL, '2fea6c02a98d6318d44cdf150775f07a', 'Mahdi', NULL, 'petani', 1, 'default.jpg', '2025-12-06 09:34:09'),
-(4, 'poetry245@gmail.com', NULL, 'a8dabd836fef3e91986ac7a0b7ecf674', 'poetry', NULL, 'petani', 1, 'default.jpg', '2025-12-06 12:40:03');
+(6, 'bagas04@gmail.com', '81231951241', '$2y$10$jqsmcWkBmio.vQL1mu0xEOoyCjTmLlA5Jt03W2mmyoJy88UriPCJG', 'bagas', NULL, 'petani', 1, 'default.jpg', '2025-12-06 18:37:26'),
+(7, 'admin@dinas.go.id', '0811-1234-5678', '$2y$10$8hMvv/O0KQTx997CsIlivOxP8VxDb4m8Lsv9FZTj5Fr/pgNjx4RFC', 'Super Admin Dinas', NULL, 'dinas', 1, 'default.jpg', '2025-12-07 00:40:34');
 
 --
 -- Indexes for dumped tables
@@ -230,7 +228,7 @@ ALTER TABLE `siklus_tanam`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
