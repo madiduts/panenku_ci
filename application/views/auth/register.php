@@ -71,7 +71,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
                         <input type="text" name="phone_number" required 
                             class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-brand-green focus:ring-1 focus:ring-brand-green transition placeholder-gray-400"
-                            placeholder="0812...">
+                            placeholder="081234567890">
                     </div>
 
                     <!-- Password -->

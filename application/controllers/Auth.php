@@ -81,6 +81,7 @@ class Auth extends CI_Controller {
                 'email'     => $this->input->post('email', true),
                 'password'  => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
                 'role'      => 'petani',
+                'phone_number' => $this->input->post('phone_number', true),
                 'created_at'=> date('Y-m-d H:i:s')
             ];
 

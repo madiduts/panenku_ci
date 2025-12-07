@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Dinas extends CI_Controller {
+class Dashboard_d extends CI_Controller {
     public function index()
     {
         // Memuat view khusus untuk dashboard dinas
