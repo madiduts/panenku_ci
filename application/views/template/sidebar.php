@@ -14,7 +14,7 @@
         <nav class="px-4 space-y-1">
             <!-- DASHBOARD LINK -->
             <!-- Perhatikan: Kita pakai site_url(), bukan onclick JS -->
-            <a href="<?= site_url('petani/dashboard') ?>" 
+            <a href="<?= base_url('petani/dashboard') ?>" 
                class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
                <?= ($active_menu == 'dashboard') ? 'bg-green-600 text-white shadow-md shadow-green-200' : 'text-gray-600 hover:bg-green-50 hover:text-green-700' ?>">
                 <i class="fas fa-home w-5 <?= ($active_menu == 'dashboard') ? 'text-white' : 'text-gray-500' ?>"></i>
@@ -22,7 +22,7 @@
             </a>
 
             <!-- LAHAN LINK -->
-            <a href="<?= site_url('petani/lahan') ?>" 
+            <a href="<?= base_url('petani/lahan') ?>" 
                class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
                <?= ($active_menu == 'lahan') ? 'bg-green-600 text-white shadow-md shadow-green-200' : 'text-gray-600 hover:bg-green-50 hover:text-green-700' ?>">
                 <i class="fas fa-leaf w-5 <?= ($active_menu == 'lahan') ? 'text-white' : 'text-gray-500' ?>"></i>
@@ -30,7 +30,7 @@
             </a>
 
             <!-- SIKLUS LINK -->
-            <a href="<?= site_url('petani/siklus') ?>" 
+            <a href="<?= base_url('petani/siklus') ?>" 
                class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
                <?= ($active_menu == 'siklus') ? 'bg-green-600 text-white shadow-md shadow-green-200' : 'text-gray-600 hover:bg-green-50 hover:text-green-700' ?>">
                 <i class="fas fa-calendar-alt w-5 <?= ($active_menu == 'siklus') ? 'text-white' : 'text-gray-500' ?>"></i>
