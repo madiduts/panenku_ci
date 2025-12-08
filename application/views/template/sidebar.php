@@ -37,7 +37,19 @@
                 <span>Siklus & Aktivitas</span>
             </a>
             
-            <!-- Tambahkan menu lain sesuai kebutuhan -->
+            <a href="<?= base_url('petani/laporan') ?>" 
+               class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
+               <?= ($active_menu == 'laporan') ? 'bg-green-600 text-white shadow-md shadow-green-200' : 'text-gray-600 hover:bg-green-50 hover:text-green-700' ?>">
+                <i class="fas fa-file-alt w-5 <?= ($active_menu == 'laporan') ? 'text-white' : 'text-gray-500' ?>"></i>
+                <span>Informasi & Bantuan</span>
+            </a>
+
+            <a href="<?= base_url('petani/profil') ?>" 
+               class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
+               <?= ($active_menu == 'profil') ? 'bg-green-600 text-white shadow-md shadow-green-200' : 'text-gray-600 hover:bg-green-50 hover:text-green-700' ?>">
+                <i class="fas fa-file-alt w-5 <?= ($active_menu == 'profil') ? 'text-white' : 'text-gray-500' ?>"></i>
+                <span>Profil</span>
+            </a>
         </nav>
     </div>
 

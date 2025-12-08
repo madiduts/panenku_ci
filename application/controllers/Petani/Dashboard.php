@@ -64,4 +64,24 @@ class Dashboard extends CI_Controller {
             'avatar' => 'default.jpg'
         ];
     }
+
+    private function _hitung_progress($tgl_tanam_str, $tgl_panen_str) {
+        if(empty($tgl_tanam_str) || empty($tgl_panen_str)) return 0;
+
+        try {
+            $tgl_tanam = new DateTime($tgl_tanam_str);
+            $tgl_panen = new DateTime($tgl_panen_str);
+            $tgl_skrg  = new DateTime();
+            
+            $total_hari = $tgl_tanam->diff($tgl_panen)->days;
+            $hari_jalan = $tgl_tanam->diff($tgl_skrg)->days;
+            
+            if ($total_hari <= 0) return 0;
+
+            $persen = round(($hari_jalan / $total_hari) * 100);
+            return ($persen > 100) ? 100 : (($persen < 0) ? 0 : $persen);
+        } catch (Exception $e) {
+            return 0;
+        }
+    }
 }

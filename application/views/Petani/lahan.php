@@ -154,8 +154,10 @@
                     </div>
                     <?php if($is_aktif): ?>
                         <div class="w-full bg-gray-100 rounded-full h-1.5 mt-2">
-                            <div class="bg-green-500 h-1.5 rounded-full" style="width: 45%"></div> <!-- Dummy progress 45% -->
+                            <!-- FIX: Gunakan variabel $l->progress, bukan angka mati 45% -->
+                            <div class="bg-green-500 h-1.5 rounded-full transition-all duration-1000" style="width: <?= $l->progress ?>%"></div>
                         </div>
+                        <p class="text-[10px] text-green-600 mt-1 font-bold"><?= $l->progress ?>%</p>
                     <?php else: ?>
                         <span class="text-xs text-gray-400">-</span>
                     <?php endif; ?>
