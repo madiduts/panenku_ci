@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($title) ? $title : 'AgriPlatform - Farm Management' ?></title>
+    <title><?= isset($title) ? $title : 'Panenku - Farm Management' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -44,7 +44,7 @@
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-leaf text-green-500 text-2xl"></i>
                         <div>
-                            <h1 class="font-bold text-gray-800 text-lg leading-tight">AgriPlatform</h1>
+                            <h1 class="font-bold text-gray-800 text-lg leading-tight">Panenku</h1>
                             <p class="text-xs text-gray-400">Farm Management</p>
                         </div>
                     </div>
@@ -78,9 +78,15 @@
             <!-- USER PROFILE MINI -->
             <div class="p-4 border-t border-gray-100">
                 <div class="bg-gray-50 rounded-xl p-3 flex items-center space-x-3 mb-3">
-                    <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
-                        <?= isset($user['avatar']) ? $user['avatar'] : 'P' ?>
+                    <!-- MODIFIKASI: Avatar Sidebar disamakan dengan Profil (Instagram Style) -->
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+                        <?php if(isset($user['avatar_url']) && $user['avatar_url'] != ''): ?>
+                            <img src="<?= $user['avatar_url'] ?>" class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <i class="fas fa-user text-gray-400 text-lg mt-1"></i>
+                        <?php endif; ?>
                     </div>
+                    
                     <div class="flex-1 overflow-hidden">
                         <h4 class="text-sm font-bold text-gray-800 truncate"><?= isset($user['name']) ? $user['name'] : 'Petani' ?></h4>
                         <p class="text-xs text-gray-500 truncate"><?= isset($user['role']) ? $user['role'] : 'User' ?></p>
@@ -99,7 +105,7 @@
             <div class="md:hidden sticky top-0 z-30 bg-white border-b p-4 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                      <i class="fas fa-leaf text-green-500"></i>
-                     <span class="font-bold">AgriPlatform</span>
+                     <span class="font-bold">Panenku</span>
                 </div>
                 <button class="text-gray-600"><i class="fas fa-bars"></i></button>
             </div>

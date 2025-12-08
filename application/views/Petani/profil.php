@@ -12,8 +12,17 @@ $is_edit = isset($_GET['mode']) && $_GET['mode'] == 'edit';
     
     <!-- LEFT COLUMN (Avatar & Actions) -->
     <div class="w-full md:w-1/3 p-8 border-b md:border-b-0 md:border-r border-gray-100 flex flex-col items-center justify-center text-center">
-        <div class="w-32 h-32 rounded-full bg-green-500 text-white flex items-center justify-center text-6xl font-normal mb-6">
-            <?= isset($user['avatar']) ? $user['avatar'] : 'P' ?>
+        
+        <!-- MODIFIKASI: Default Profile Picture a la Instagram -->
+        <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-6 overflow-hidden border-4 border-white shadow-sm relative">
+            <?php if(isset($user['avatar_url']) && $user['avatar_url'] != ''): ?>
+                <!-- Jika nanti sudah ada fitur upload foto, ini akan dipakai -->
+                <img src="<?= $user['avatar_url'] ?>" class="w-full h-full object-cover">
+            <?php else: ?>
+                <!-- Default Tampilan (Siluet Orang) -->
+                <!-- mt-4 digunakan agar icon agak turun sedikit seperti gaya bust photo -->
+                <i class="fas fa-user text-gray-400 text-7xl mt-4"></i>
+            <?php endif; ?>
         </div>
         
         <h3 class="text-xl font-bold text-gray-900"><?= isset($profil->namaLengkap) ? $profil->namaLengkap : 'Nama Petani' ?></h3>
