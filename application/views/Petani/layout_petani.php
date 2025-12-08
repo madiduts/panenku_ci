@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($title) ? $title : 'Panenku - Farm Management' ?></title>
+    <title><?= isset($title) ? $title : 'AgriPlatform - Farm Management' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -42,7 +42,17 @@
             <div>
                 <div class="p-6 mb-4">
                     <div class="flex items-center space-x-2">
-                        <i class="fas fa-leaf text-green-500 text-2xl"></i>
+                        <!-- BAGIAN LOGO DIGANTI DISINI -->
+                        <!-- Pastikan file gambar ada di folder assets/img/logo.png -->
+                        <!-- Sesuaikan class w-8 h-8 atau w-10 h-10 untuk mengatur ukuran -->
+                        <img src="<?= base_url('assets/img/logo.png') ?>" 
+                             alt="Logo Panenku" 
+                             class="w-10 h-10 object-contain"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        
+                        <!-- Fallback: Icon ini akan muncul jika gambar logo tidak ditemukan (error) -->
+                        <i class="fas fa-leaf text-green-500 text-2xl" style="display:none;"></i>
+                        
                         <div>
                             <h1 class="font-bold text-gray-800 text-lg leading-tight">Panenku</h1>
                             <p class="text-xs text-gray-400">Farm Management</p>
@@ -104,7 +114,14 @@
             <!-- MOBILE HEADER -->
             <div class="md:hidden sticky top-0 z-30 bg-white border-b p-4 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                     <i class="fas fa-leaf text-green-500"></i>
+                     <!-- BAGIAN LOGO MOBILE DIGANTI DISINI -->
+                     <img src="<?= base_url('assets/img/logo.png') ?>" 
+                          alt="Logo" 
+                          class="w-8 h-8 object-contain"
+                          onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                     
+                     <i class="fas fa-leaf text-green-500 text-xl" style="display:none;"></i>
+                     
                      <span class="font-bold">Panenku</span>
                 </div>
                 <button class="text-gray-600"><i class="fas fa-bars"></i></button>

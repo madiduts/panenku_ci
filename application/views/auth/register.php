@@ -26,10 +26,24 @@
             <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1769&auto=format&fit=crop" 
                  class="absolute inset-0 h-full w-full object-cover opacity-80" alt="Ladang">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/30 to-transparent"></div>
+            
+            <!-- BAGIAN LOGO (REGISTER) -->
             <div class="absolute top-8 left-8 flex items-center gap-3 z-10">
-                <div class="bg-white/20 backdrop-blur p-2 rounded-lg"><i class="fas fa-leaf text-white text-xl"></i></div>
-                <span class="text-white font-bold text-xl">Panenku</span>
+                <!-- Container Logo dengan Background (Sama seperti Login) -->
+                <div class="bg-white/20 backdrop-blur p-2 rounded-lg shadow-md">
+                    <!-- Logo Image (Putih) -->
+                    <img src="<?= base_url('assets/img/logo_white.png') ?>" 
+                         alt="Logo Panenku" 
+                         class="h-8 w-auto object-contain drop-shadow-sm" 
+                         onerror="this.style.display='none'; document.getElementById('fallback-icon-register').style.display='block';">
+                    
+                    <!-- Fallback: Icon Daun Putih (Jika gambar tidak muncul) -->
+                    <i id="fallback-icon-register" class="fas fa-leaf text-white text-lg" style="display:none;"></i>
+                </div>
+
+                <span class="text-white font-bold text-xl drop-shadow-md">Panenku</span>
             </div>
+
             <div class="absolute bottom-0 left-0 p-12 z-10 w-full">
                 <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Bergabung Bersama<br>Komunitas Petani</h1>
                 <p class="text-green-50 text-sm leading-relaxed max-w-md">Daftarkan diri Anda untuk mulai mengelola lahan pertanian dengan lebih efisien.</p>
@@ -38,7 +52,7 @@
 
         <!-- KANAN: FORM REGISTER -->
         <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 lg:px-24 bg-white h-full overflow-y-auto">
-            <div class="w-full max-w-sm mx-auto my-10"> <!-- Tambah my-10 biar aman saat scroll -->
+            <div class="w-full max-w-sm mx-auto my-10">
                 <h2 class="text-3xl font-bold text-gray-900 mb-2">Buat Akun Baru</h2>
                 <p class="text-gray-500 mb-8 text-sm">Isi data diri Anda untuk mendaftar.</p>
 
@@ -66,7 +80,7 @@
                             placeholder="nama@email.com">
                     </div>
 
-                    <!-- Nomor HP (TAMBAHAN PENTING) -->
+                    <!-- Nomor HP -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
                         <input type="text" name="phone_number" required 

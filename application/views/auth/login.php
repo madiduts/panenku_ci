@@ -26,10 +26,25 @@
             <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1770&auto=format&fit=crop" 
                  class="absolute inset-0 h-full w-full object-cover opacity-80" alt="Sawah">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/30 to-transparent"></div>
+            
+            <!-- BAGIAN LOGO (LOGIN) -->
             <div class="absolute top-8 left-8 flex items-center gap-3 z-10">
-                <div class="bg-white/20 backdrop-blur p-2 rounded-lg"><i class="fas fa-leaf text-white text-xl"></i></div>
-                <span class="text-white font-bold text-xl">Panenku</span>
+                <!-- Container Logo dengan Background -->
+                <div class="bg-white/20 backdrop-blur p-2 rounded-lg shadow-md">
+                    <!-- Logo Image (Putih) -->
+                    <!-- Pastikan file logo_white.png ada di assets/img/ -->
+                    <img src="<?= base_url('assets/img/logo_white.png') ?>" 
+                         alt="Logo Panenku" 
+                         class="h-8 w-auto object-contain drop-shadow-sm" 
+                         onerror="this.style.display='none'; document.getElementById('fallback-icon-login').style.display='block';">
+                    
+                    <!-- Fallback: Icon Daun Putih (Jika gambar tidak muncul) -->
+                    <i id="fallback-icon-login" class="fas fa-leaf text-white text-lg" style="display:none;"></i>
+                </div>
+
+                <span class="text-white font-bold text-xl drop-shadow-md">Panenku</span>
             </div>
+
             <div class="absolute bottom-0 left-0 p-12 z-10 w-full">
                 <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Solusi Pertanian<br>Masa Depan</h1>
                 <p class="text-green-50 text-sm leading-relaxed max-w-md">Kelola lahan, pantau panen, dan tingkatkan produktivitas pertanian Anda.</p>
