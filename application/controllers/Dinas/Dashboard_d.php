@@ -8,13 +8,11 @@ class Dashboard_d extends CI_Controller {
         parent::__construct();
         $this->load->helper('url');
         
-        // Cek Login & Role
         if (!$this->session->userdata('user_id')) {
             redirect('auth/login');
         }
-
         if ($this->session->userdata('role') !== 'dinas') {
-            show_error('Anda tidak memiliki akses ke halaman ini.', 403, 'Akses Ditolak');
+            show_error('Akses Ditolak', 403);
         }
     }
 
@@ -25,12 +23,10 @@ class Dashboard_d extends CI_Controller {
 
     public function dashboard()
     {
-        // 1. Load Model
         $this->load->model('M_dinas');
 
-        // 2. Setup Data Dasar (INI YANG HILANG SEBELUMNYA)
         $data['title'] = 'Monitoring & Visualisasi - Dinas Pertanian';
-        $data['active_menu'] = 'monitoring'; // <-- Variable ini wajib ada agar layout tidak error
+        $data['active_menu'] = 'monitoring'; 
         
         $data['user'] = [
             'name' => $this->session->userdata('full_name'),
@@ -40,67 +36,35 @@ class Dashboard_d extends CI_Controller {
         
         $data['content'] = 'dinas/dashboard';
 
-        // 3. Ambil Data Statistik (Stats Cards)
+        // Stats Dashboard
         $data['stats'] = [
             'totalPetani'    => $this->M_dinas->count_petani(),
             'totalLahan'     => $this->M_dinas->sum_luas_lahan(),
-            'laporanPending' => $this->M_dinas->count_pending_panen(),
+            'laporanPending' => $this->M_dinas->count_pending_panen(), // Tetap butuh ini untuk ringkasan
             'warningHama'    => $this->M_dinas->count_active_hama()
         ];
 
-        // 4. Logika EWS (Early Warning System)
-        // Mengambil data mentah dari Model yang sudah diperbaiki query-nya
+        // EWS Logic
         $raw_ews = $this->M_dinas->get_ews_list();
         $mapped_ews = [];
-        
         foreach($raw_ews as $row) {
-            // Presentation Logic: Menentukan Level Bahaya
-            $level = 'Waspada'; // Default
-            if ($row->tingkat_keparahan == 'Berat/Puso') {
-                $level = 'Bahaya';
-            } elseif ($row->tingkat_keparahan == 'Sedang') {
-                $level = 'Siaga';
-            }
+            $level = 'Waspada';
+            if ($row->tingkat_keparahan == 'Berat/Puso') $level = 'Bahaya';
+            elseif ($row->tingkat_keparahan == 'Sedang') $level = 'Siaga';
 
-            // Data Mapping untuk View
             $mapped_ews[] = (object) [
-                'hama'      => $row->hama,       // Dari alias SQL
-                'lokasi'    => $row->lokasi,     // Dari alias SQL
-                'komoditas' => $row->komoditas,  // Dari alias SQL & COALESCE
+                'hama'      => $row->hama,       
+                'lokasi'    => $row->lokasi,     
+                'komoditas' => $row->komoditas,
                 'level'     => $level,
                 'luas'      => $row->luas_lahan . ' Ha',
                 'waktu'     => date('d M Y', strtotime($row->tanggal_lapor))
             ];
         }
-        $data['ews'] = $mapped_ews; // Kirim data yang sudah rapi ke View
+        $data['ews'] = $mapped_ews;
 
-        // 5. Data Chart
-        $chart_data = $this->M_dinas->get_commodity_distribution();
-        $data['chart_data'] = json_encode($chart_data);
-
-        // 6. [BARU] Data GIS / Sebaran Desa
+        $data['chart_data'] = json_encode($this->M_dinas->get_commodity_distribution());
         $data['sebaran_desa'] = $this->M_dinas->get_village_stats();
-
-        // 7. Load View Utama
-        $this->load->view('dinas/layout_dinas', $data);
-    }
-
-    // --- Method Lainnya (Mock Data / Dummy) ---
-    
-    public function validasi()
-    {
-        $data['title'] = 'Validasi Data - Dinas Pertanian';
-        $data['active_menu'] = 'validasi';
-        $data['user'] = [
-            'name' => $this->session->userdata('full_name'),
-            'role' => 'Admin Dinas', 
-            'avatar' => 'default.jpg'
-        ];
-        $data['content'] = 'dinas/validasi';
-        
-        $data['stats'] = ['laporanPending' => 4];
-        $data['laporanMasuk'] = json_decode(json_encode([])); 
-        $data['riwayatValidasi'] = json_decode(json_encode([]));
 
         $this->load->view('dinas/layout_dinas', $data);
     }
