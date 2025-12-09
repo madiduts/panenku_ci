@@ -67,8 +67,6 @@
             </div>
         <?php else: ?>
             <?php foreach($sebaran_desa as $desa): 
-                // Generate warna random atau statis untuk variasi visual
-                // Disini kita pakai Hijau default agar konsisten
             ?>
             <div class="bg-green-50 border border-green-100 rounded-lg p-4">
                 <div class="flex justify-between items-start mb-2">
@@ -80,7 +78,6 @@
                 </div>
                 <div class="space-y-1 text-xs text-gray-600">
                     <p>Luas: <span class="font-semibold"><?= $desa->total_luas ?> Ha</span></p>
-                    <p>Petani: <span class="font-semibold"><?= $desa->total_petani ?> orang</span></p>
                     <!-- Koordinat masih dummy karena di database tabel lahan BELUM ADA kolom lat/long -->
                     <p class="text-[10px] text-gray-400">Koordinat: <i>(Data GPS Belum Ada)</i></p>
                 </div>
@@ -147,3 +144,61 @@
         <?php endif; ?>
      </div>
 </div>
+
+<!-- SCRIPT UNTUK CHART -->
+<!-- Pastikan Chart.js sudah diload di layout utama atau load via CDN di sini -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Ambil Data dari PHP (Serialization)
+    // Kita encode array PHP menjadi JSON String agar bisa dibaca JS
+    const rawData = <?= json_encode($sebaran_desa) ?>;
+
+    // 2. Mapping Data (JS Array Manipulation)
+    // Pisahkan nama desa (Labels) dan luas lahan (Data)
+    // Jika rawData kosong, berikan default array kosong
+    const labels = rawData ? rawData.map(item => item.lokasi_desa) : [];
+    const dataLuas = rawData ? rawData.map(item => item.total_luas) : [];
+
+    // 3. Render Chart
+    const ctx = document.getElementById('villageStatsChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'bar', // Tipe Chart
+        data: {
+            labels: labels, // Sumbu X (Nama Desa)
+            datasets: [{
+                label: 'Luas Lahan (Hektar)',
+                data: dataLuas, // Sumbu Y (Nilai Luas)
+                backgroundColor: 'rgba(34, 197, 94, 0.6)', // Tailwind Green-500
+                borderColor: 'rgba(34, 197, 94, 1)',
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#f3f4f6' // Tailwind Gray-100
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // Sembunyikan legenda karena judul sudah jelas
+                }
+            }
+        }
+    });
+});
+</script>
