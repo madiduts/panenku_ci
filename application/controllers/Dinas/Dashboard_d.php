@@ -7,6 +7,8 @@ class Dashboard_d extends CI_Controller {
     {
         parent::__construct();
         $this->load->helper('url');
+        $this->load->model('M_dinas'); 
+        $this->load->model('M_panen'); 
         
         if (!$this->session->userdata('user_id')) {
             redirect('auth/login');
@@ -100,5 +102,24 @@ class Dashboard_d extends CI_Controller {
         $data['masterPetani'] = [];
 
         $this->load->view('dinas/layout_dinas', $data);
+    }
+
+    public function validasi() {
+        // 1. Ambil Data Panen (Kode Lama Kamu)
+        $data['laporanPanen'] = $this->M_panen->get_pending_panen(); 
+        
+        // 2. AMBIL DATA HAMA (INI YANG KEMARIN HILANG!)
+        // Variabel ini ($laporanHama) yang ditunggu oleh View validasi.php
+        $data['laporanHama'] = $this->M_dinas->get_laporan_hama_pending();
+
+        // 3. Debugging (Opsional - Hapus nanti)
+        // Jika ingin cek apakah data ketarik, uncomment baris bawah:
+        // echo '<pre>'; print_r($data['laporanHama']); die;
+
+        // 4. Load View
+        $data['title'] = 'Validasi Laporan';
+        $this->load->view('templates/header', $data);
+        $this->load->view('dinas/validasi', $data); // View yang sudah kamu perbaiki tadi
+        $this->load->view('templates/footer');
     }
 }
