@@ -127,16 +127,32 @@ $is_edit = isset($_GET['mode']) && $_GET['mode'] == 'edit';
 
 <!-- STATS SECTION (Visual only, opacity 50% in Edit Mode) -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 <?= $is_edit ? 'opacity-50 pointer-events-none select-none' : '' ?>">
+    
+    <!-- Card 1: Total Lahan -->
     <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm flex flex-col items-center justify-center text-center">
-        <h4 class="text-3xl font-bold text-green-500 mb-1">8</h4>
+        <h4 class="text-3xl font-bold text-green-500 mb-1">
+            <?= isset($stats->total_lahan) ? $stats->total_lahan : 0 ?>
+        </h4>
         <p class="text-gray-500 text-sm">Total Lahan</p>
     </div>
+
+    <!-- Card 2: Total Luas -->
     <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm flex flex-col items-center justify-center text-center">
-        <h4 class="text-3xl font-bold text-blue-500 mb-1">156</h4>
+        <h4 class="text-3xl font-bold text-blue-500 mb-1">
+            <?php 
+                // Format angka: 2 desimal jika ada koma, pemisah ribuan titik
+                $luas = isset($stats->total_luas) ? $stats->total_luas : 0;
+                echo number_format($luas, 1, ',', '.'); 
+            ?>
+        </h4>
         <p class="text-gray-500 text-sm">Total Luas (ha)</p>
     </div>
+
+    <!-- Card 3: Siklus Selesai -->
     <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm flex flex-col items-center justify-center text-center">
-        <h4 class="text-3xl font-bold text-orange-500 mb-1">24</h4>
+        <h4 class="text-3xl font-bold text-orange-500 mb-1">
+            <?= isset($stats->siklus_selesai) ? $stats->siklus_selesai : 0 ?>
+        </h4>
         <p class="text-gray-500 text-sm">Siklus Selesai</p>
     </div>
 </div>
