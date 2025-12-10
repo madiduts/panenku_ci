@@ -10,7 +10,8 @@ class Dashboard_d extends CI_Controller {
         
         // Load Model
         $this->load->model('M_dinas'); 
-        $this->load->model('M_panen'); 
+        $this->load->model('M_panen');
+        $this->load->model('M_notifikasi');
         
         // Gatekeeping: Cek Login & Role
         if (!$this->session->userdata('user_id')) {
@@ -29,8 +30,9 @@ class Dashboard_d extends CI_Controller {
     public function dashboard()
     {
         $this->load->model('M_dinas');
+        $user_id = $this->session->userdata('user_id');
 
-        $data['title'] = 'Monitoring & Visualisasi - Dinas Pertanian';
+        $data['title'] = 'Monitoring & Visualisasi';
         $data['active_menu'] = 'monitoring'; 
         
         $data['user'] = [
@@ -39,17 +41,20 @@ class Dashboard_d extends CI_Controller {
             'avatar' => 'default.jpg' 
         ];
         
-        $data['content'] = 'dinas/dashboard';
+        // --- 1. DATA NOTIFIKASI (WIDGET) ---
+        // Ambil 5 notifikasi terakhir untuk ditampilkan di widget
+        $data['notifikasi_list'] = $this->M_notifikasi->get_by_user($user_id, 5);
+        $data['notif_unread']    = $this->M_notifikasi->count_unread($user_id);
 
         // Stats Dashboard
         $data['stats'] = [
             'totalPetani'    => $this->M_dinas->count_petani(),
             'totalLahan'     => $this->M_dinas->sum_luas_lahan(),
-            'laporanPending' => $this->M_dinas->count_pending_panen(), // Tetap butuh ini untuk ringkasan
+            'laporanPending' => $this->M_dinas->count_pending_panen(),
             'warningHama'    => $this->M_dinas->count_active_hama()
         ];
 
-        // EWS Logic
+        // EWS Logic (Existing)
         $raw_ews = $this->M_dinas->get_ews_list();
         $mapped_ews = [];
         foreach($raw_ews as $row) {
@@ -71,8 +76,10 @@ class Dashboard_d extends CI_Controller {
         $data['chart_data'] = json_encode($this->M_dinas->get_commodity_distribution());
         $data['sebaran_desa'] = $this->M_dinas->get_village_stats();
 
+        $data['content'] = 'dinas/dashboard';
         $this->load->view('dinas/layout_dinas', $data);
     }
+
 
     public function laporan()
     {
@@ -109,13 +116,9 @@ class Dashboard_d extends CI_Controller {
 
     public function validasi()
     {
-        // Ambil Data Hama dari Model yang baru diperbaiki
         $data['laporanHama'] = $this->M_dinas->get_laporan_hama_pending();
-        
-        // Ambil Data Panen
         $data['laporanPanen'] = $this->M_panen->get_pending_panen(); 
 
-        // Hitung Stats
         $data['stats'] = [
             'laporanPending'    => count($data['laporanHama']) + count($data['laporanPanen']),
             'disetujuiBulanIni' => 0,
@@ -124,6 +127,8 @@ class Dashboard_d extends CI_Controller {
 
         $data['title'] = 'Validasi Laporan';
         
+        // PENTING: Function validasi ini harusnya memanggil layout utama juga agar menu tetap ada
+        // Tapi jika kamu pakai struktur terpisah header/footer, biarkan seperti kodemu sebelumnya.
         $this->load->view('templates/header_dinas', $data); 
         $this->load->view('dinas/validasi', $data);         
         $this->load->view('templates/footer_dinas');        

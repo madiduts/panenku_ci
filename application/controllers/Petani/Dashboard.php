@@ -10,12 +10,13 @@ class Dashboard extends CI_Controller {
         
         $this->load->model('M_lahan');
         $this->load->model('M_siklus');
+        $this->load->model('M_notifikasi');
     }
 
     public function index() {
         $user_id = $this->session->userdata('user_id');
         
-        $data['title'] = 'Dashboard';
+        $data['title'] = 'Dashboard Petani';
         $data['active_menu'] = 'dashboard';
         $data['user'] = [
             'name' => $this->session->userdata('full_name'), 
@@ -23,22 +24,21 @@ class Dashboard extends CI_Controller {
             'avatar' => 'default.jpg'
         ];
 
-        // 1. Hitung Total Lahan (Sudah Benar)
+        // 2. AMBIL DATA NOTIFIKASI
+        // Ambil 5 notifikasi terbaru & jumlah yang belum dibaca
+        $data['notifikasi_list'] = $this->M_notifikasi->get_by_user($user_id, 5);
+        $data['notif_unread']    = $this->M_notifikasi->count_unread($user_id);
+
+        // --- Data Statistik Lainnya (Tetap Sama) ---
         $lahan_petani = $this->M_lahan->get_by_petani($user_id);
         $data['total_lahan'] = count($lahan_petani);
 
-        // 2. [PERBAIKAN] Hitung Total Luas (BAGIAN INI YANG HILANG)
-        // Kita panggil fungsi sum_luas_lahan di Model
         $luas = $this->M_lahan->sum_luas_lahan($user_id);
-        
-        // Cek: Jika hasilnya NULL (belum ada lahan), set jadi 0
         $data['total_luas'] = empty($luas) ? 0 : $luas;
 
-        // 3. Data Lahan Aktif untuk Widget (Sudah Benar)
         $siklus_aktif = $this->M_siklus->get_active_siklus($user_id);
         $data['total_lahan_aktif'] = count($siklus_aktif);
         
-        // Mapping Lahan List untuk Widget Dashboard
         $data['lahan_list'] = [];
         foreach($siklus_aktif as $row) {
              $persen = $this->_hitung_progress($row['tanggal_tanam'], $row['estimasi_panen']);
@@ -56,6 +56,7 @@ class Dashboard extends CI_Controller {
         $this->load->view('petani/layout_petani', $data);
     }
 
+
     // Helper biar gak nulis ulang terus
     private function _get_user_data() {
         return [
@@ -67,21 +68,15 @@ class Dashboard extends CI_Controller {
 
     private function _hitung_progress($tgl_tanam_str, $tgl_panen_str) {
         if(empty($tgl_tanam_str) || empty($tgl_panen_str)) return 0;
-
         try {
             $tgl_tanam = new DateTime($tgl_tanam_str);
             $tgl_panen = new DateTime($tgl_panen_str);
             $tgl_skrg  = new DateTime();
-            
             $total_hari = $tgl_tanam->diff($tgl_panen)->days;
             $hari_jalan = $tgl_tanam->diff($tgl_skrg)->days;
-            
             if ($total_hari <= 0) return 0;
-
             $persen = round(($hari_jalan / $total_hari) * 100);
             return ($persen > 100) ? 100 : (($persen < 0) ? 0 : $persen);
-        } catch (Exception $e) {
-            return 0;
-        }
+        } catch (Exception $e) { return 0; }
     }
 }
