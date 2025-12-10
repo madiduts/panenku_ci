@@ -79,23 +79,40 @@ class M_dinas extends CI_Model {
 
     public function get_laporan_hama_pending()
     {
+        // 1. SELECT (Gunakan alias 'id' agar sesuai dengan View)
+        // COALESCE digunakan untuk menangani jika ada data NULL dari hasil Join
         $this->db->select('
-            laporan_hama.id,
+            laporan_hama.laporan_id as id,
             laporan_hama.tingkat_keparahan,
-            laporan_hama.tanggal_lapor,
             laporan_hama.foto_bukti,
+            laporan_hama.tanggal_lapor,
             laporan_hama.status_validasi,
-            ref_hama.nama_hama,
-            users.full_name as nama_petani,
-            lahan.lokasi_desa
+            laporan_hama.hama_id,
+            laporan_hama.siklus_id,
+            
+            COALESCE(ref_jenis_hama.nama_hama, "Jenis Hama Tidak Diketahui") as nama_hama,
+            COALESCE(users.full_name, "Petani Tidak Dikenal") as nama_petani,
+            COALESCE(lahan.lokasi_desa, "Lokasi Tidak Ada") as lokasi_desa
         ');
+
         $this->db->from('laporan_hama');
-        $this->db->join('siklus_tanam', 'siklus_tanam.siklus_id = laporan_hama.siklus_id');
-        $this->db->join('lahan', 'lahan.lahan_id = siklus_tanam.lahan_id');
-        $this->db->join('users', 'users.user_id = lahan.user_id');
-        $this->db->join('ref_hama', 'ref_hama.hama_id = laporan_hama.hama_id');
+
+        // 2. JOIN (GUNAKAN LEFT JOIN - SANGAT PENTING!)
+        // Sesuai hasil diagnosa Test_db, relasi ada tapi kita harus permissive.
+        
+        $this->db->join('siklus_tanam', 'siklus_tanam.siklus_id = laporan_hama.siklus_id', 'left');
+        $this->db->join('lahan', 'lahan.lahan_id = siklus_tanam.lahan_id', 'left');
+        $this->db->join('users', 'users.user_id = lahan.user_id', 'left');
+        $this->db->join('ref_jenis_hama', 'ref_jenis_hama.hama_id = laporan_hama.hama_id', 'left');
+
+        // 3. FILTER
+        $this->db->where('laporan_hama.status_validasi', 'Pending');
+        
+        // 4. SORTING
         $this->db->order_by('laporan_hama.tanggal_lapor', 'DESC');
 
+        // Penting: Gunakan result() untuk menghasilkan OBJECT (bukan array)
+        // Karena di View kita pakai $hama->nama_hama (tanda panah)
         return $this->db->get()->result();
     }
 }

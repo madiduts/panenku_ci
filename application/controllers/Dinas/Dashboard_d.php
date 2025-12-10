@@ -7,14 +7,17 @@ class Dashboard_d extends CI_Controller {
     {
         parent::__construct();
         $this->load->helper('url');
+        
+        // Load Model
         $this->load->model('M_dinas'); 
         $this->load->model('M_panen'); 
         
+        // Gatekeeping: Cek Login & Role
         if (!$this->session->userdata('user_id')) {
             redirect('auth/login');
         }
         if ($this->session->userdata('role') !== 'dinas') {
-            show_error('Akses Ditolak', 403);
+            show_error('Akses Ditolak: Halaman ini hanya untuk Dinas Pertanian.', 403);
         }
     }
 
@@ -104,22 +107,59 @@ class Dashboard_d extends CI_Controller {
         $this->load->view('dinas/layout_dinas', $data);
     }
 
-    public function validasi() {
-        // 1. Ambil Data Panen (Kode Lama Kamu)
-        $data['laporanPanen'] = $this->M_panen->get_pending_panen(); 
-        
-        // 2. AMBIL DATA HAMA (INI YANG KEMARIN HILANG!)
-        // Variabel ini ($laporanHama) yang ditunggu oleh View validasi.php
+    public function validasi()
+    {
+        // Ambil Data Hama dari Model yang baru diperbaiki
         $data['laporanHama'] = $this->M_dinas->get_laporan_hama_pending();
+        
+        // Ambil Data Panen
+        $data['laporanPanen'] = $this->M_panen->get_pending_panen(); 
 
-        // 3. Debugging (Opsional - Hapus nanti)
-        // Jika ingin cek apakah data ketarik, uncomment baris bawah:
-        // echo '<pre>'; print_r($data['laporanHama']); die;
+        // Hitung Stats
+        $data['stats'] = [
+            'laporanPending'    => count($data['laporanHama']) + count($data['laporanPanen']),
+            'disetujuiBulanIni' => 0,
+            'ditolakBulanIni'   => 0
+        ];
 
-        // 4. Load View
         $data['title'] = 'Validasi Laporan';
-        $this->load->view('templates/header', $data);
-        $this->load->view('dinas/validasi', $data); // View yang sudah kamu perbaiki tadi
-        $this->load->view('templates/footer');
+        
+        $this->load->view('templates/header_dinas', $data); 
+        $this->load->view('dinas/validasi', $data);         
+        $this->load->view('templates/footer_dinas');        
+    }
+
+    // Function untuk memproses validasi (Action Form)
+    public function submit_validasi_hama()
+    {
+        $id = $this->input->post('lapor_hama_id');
+        $status_input = $this->input->post('status');
+        $rekomendasi = $this->input->post('rekomendasi');
+
+        if(!$id) {
+            $this->session->set_flashdata('error', 'ID Laporan tidak ditemukan.');
+            redirect('dinas/dashboard_d/validasi?tab=hama');
+        }
+
+        $status_db = ($status_input == 'Diterima') ? 'Valid' : 'Reject';
+
+        $data = [
+            'status_validasi'  => $status_db,
+            'catatan_validasi' => $rekomendasi,
+            'tgl_validasi'     => date('Y-m-d H:i:s'),
+            'validator_id'     => $this->session->userdata('user_id')
+        ];
+
+        // Pastikan nama kolom Primary Key di tabel laporan_hama adalah 'laporan_id'
+        $this->db->where('laporan_id', $id);
+        $this->db->update('laporan_hama', $data);
+        
+        $this->session->set_flashdata('success', 'Validasi berhasil disimpan.');
+        redirect('dinas/dashboard_d/validasi?tab=hama');
+    }
+    
+    public function submit_validasi_panen() {
+        // ... logika panen ...
+        redirect('dinas/dashboard_d/validasi?tab=panen');
     }
 }
