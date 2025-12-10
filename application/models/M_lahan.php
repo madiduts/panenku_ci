@@ -4,7 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_lahan extends CI_Model {
 
     // 1. Ambil Lahan + Status Tanamnya (Join Table)
-    // Digunakan untuk halaman 'Kelola Lahan'
     public function get_lahan_details($user_id)
     {
         $this->db->select('
@@ -19,12 +18,12 @@ class M_lahan extends CI_Model {
         ');
         $this->db->from('lahan');
         
-        // LEFT JOIN: Ambil data lahan, jika ada siklus aktif, ambil datanya.
-        // Jika tidak ada siklus aktif, kolom siklus akan NULL (artinya Istirahat)
+        // Join ke Siklus & Komoditas
         $this->db->join('siklus_tanam', 'siklus_tanam.lahan_id = lahan.lahan_id AND siklus_tanam.status_aktif = 1', 'left');
         $this->db->join('ref_komoditas', 'ref_komoditas.komoditas_id = siklus_tanam.komoditas_id', 'left');
         
         $this->db->where('lahan.user_id', $user_id);
+        $this->db->order_by('lahan.lahan_id', 'DESC'); // Urutkan terbaru
         
         return $this->db->get()->result_array();
     }
@@ -49,5 +48,13 @@ class M_lahan extends CI_Model {
     public function insert($data)
     {
         return $this->db->insert('lahan', $data);
+    }
+
+    // 5. [BARU] Ambil Opsi Kategori Lahan dari Master Data
+    public function get_kategori_opsi()
+    {
+        // Mengambil dari tabel baru 'ref_kategori_lahan'
+        // Hasilnya array untuk dropdown di View
+        return $this->db->get('ref_kategori_lahan')->result_array();
     }
 }

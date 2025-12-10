@@ -230,7 +230,7 @@
                         </div>
                     </div>
                     
-                    <!-- Input: Kategori -->
+                    <!-- Input: Kategori (DYNAMIC DROPDOWN) -->
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wide">
                             Kategori <span class="text-red-500">*</span>
@@ -242,10 +242,12 @@
                             <select name="kategori_lahan" required 
                                     class="w-full pl-10 pr-8 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition shadow-sm bg-white appearance-none cursor-pointer">
                                 <option value="" disabled selected>Pilih...</option>
-                                <option value="Sawah Irigasi">Sawah Irigasi</option>
-                                <option value="Tadah Hujan">Tadah Hujan</option>
-                                <option value="Ladang">Ladang / Tegal</option>
-                                <option value="Perkebunan">Perkebunan</option>
+                                <?php if(!empty($kategori_opsi)): ?>
+                                    <?php foreach($kategori_opsi as $kat): ?>
+                                        <!-- Value mengambil nama kategori, sesuai logika insert di Controller -->
+                                        <option value="<?= $kat['nama_kategori'] ?>"><?= $kat['nama_kategori'] ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </select>
                             <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
                                 <i class="fas fa-chevron-down text-xs"></i>
