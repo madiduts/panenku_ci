@@ -16,10 +16,8 @@ class M_siklus extends CI_Model {
         $this->db->from('siklus_tanam');
         $this->db->join('lahan', 'lahan.lahan_id = siklus_tanam.lahan_id');
         $this->db->join('ref_komoditas', 'ref_komoditas.komoditas_id = siklus_tanam.komoditas_id');
-        
         $this->db->where('lahan.user_id', $user_id);
         $this->db->where('siklus_tanam.status_aktif', 1);
-        
         return $this->db->get()->result_array();
     }
 
@@ -49,5 +47,23 @@ class M_siklus extends CI_Model {
     public function insert_hama($data) 
     {
         return $this->db->insert('laporan_hama', $data);
+    }
+
+    public function get_detail_hama($laporan_id) 
+    {
+        $this->db->select('
+            laporan_hama.*,
+            ref_jenis_hama.nama_hama,
+            ref_jenis_hama.deskripsi_penanganan as penanganan_umum,
+            siklus_tanam.lahan_id
+        ');
+        $this->db->from('laporan_hama');
+        // Join agar dapat nama hama & deskripsi umum
+        $this->db->join('ref_jenis_hama', 'ref_jenis_hama.hama_id = laporan_hama.hama_id', 'left');
+        $this->db->join('siklus_tanam', 'siklus_tanam.siklus_id = laporan_hama.siklus_id', 'left');
+        
+        $this->db->where('laporan_hama.laporan_id', $laporan_id);
+        
+        return $this->db->get()->row_array();
     }
 }

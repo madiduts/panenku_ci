@@ -7,11 +7,12 @@ class M_notifikasi extends CI_Model {
     public function send($user_id, $tipe, $judul, $pesan, $link = '#') {
         $data = [
             'user_id' => $user_id,
-            'tipe'    => $tipe,
+            'tipe'    => $tipe,   // 'info', 'warning', 'danger', 'success'
             'judul'   => $judul,
             'pesan'   => $pesan,
             'link'    => $link,
-            'is_read' => 0
+            'is_read' => 0,
+            'created_at' => date('Y-m-d H:i:s')
         ];
         return $this->db->insert('notifikasi', $data);
     }
