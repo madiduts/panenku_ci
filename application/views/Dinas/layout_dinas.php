@@ -40,10 +40,20 @@
         <aside class="w-64 bg-white border-r border-gray-200 flex flex-col justify-between h-full hidden md:flex shrink-0 z-20">
             <div>
                 <div class="p-6 mb-2">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-blue-600 text-white p-2 rounded-lg"><i class="fas fa-building text-xl"></i></div>
+                    <div class="flex items-center space-x-2">
+                        <!-- BAGIAN LOGO SIDEBAR DIGANTI DISINI -->
+                        <img src="<?= base_url('assets/img/logo.png') ?>" 
+                             alt="Logo Panenku" 
+                             class="w-10 h-10 object-contain"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        
+                        <!-- Fallback: Ikon Gedung jika gambar tidak ada -->
+                        <div class="bg-blue-600 text-white p-2 rounded-lg" style="display:none;">
+                            <i class="fas fa-building text-xl"></i>
+                        </div>
+
                         <div>
-                            <h1 class="font-bold text-gray-800 text-lg leading-tight">AgriPlatform</h1>
+                            <h1 class="font-bold text-gray-800 text-lg leading-tight">Panenku</h1>
                             <p class="text-xs text-gray-400">Dinas Pertanian</p>
                         </div>
                     </div>
@@ -72,9 +82,14 @@
             <!-- USER PROFILE -->
             <div class="p-4 border-t border-gray-100">
                 <div class="bg-gray-50 rounded-xl p-3 flex items-center space-x-3 mb-3 border border-gray-100">
-                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
-                        <?= isset($user['avatar']) ? $user['avatar'] : 'AD' ?>
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+                        <?php if(isset($user['avatar_url']) && $user['avatar_url'] != ''): ?>
+                            <img src="<?= $user['avatar_url'] ?>" class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <i class="fas fa-user text-gray-400 text-lg mt-1"></i>
+                        <?php endif; ?>
                     </div>
+                    
                     <div class="flex-1 overflow-hidden">
                         <h4 class="text-sm font-bold text-gray-800 truncate"><?= isset($user['name']) ? $user['name'] : 'Admin' ?></h4>
                         <p class="text-[10px] text-gray-500 truncate uppercase tracking-wider"><?= isset($user['role']) ? $user['role'] : 'Dinas' ?></p>
@@ -92,8 +107,15 @@
             <!-- Header Mobile -->
             <div class="md:hidden sticky top-0 z-30 bg-white border-b p-4 flex justify-between items-center shadow-sm">
                 <div class="flex items-center space-x-2">
-                     <i class="fas fa-building text-blue-600"></i>
-                     <span class="font-bold text-gray-800">Dinas Pertanian</span>
+                     <!-- BAGIAN LOGO MOBILE DIGANTI DISINI -->
+                     <img src="<?= base_url('assets/img/logo.png') ?>" 
+                          alt="Logo" 
+                          class="w-8 h-8 object-contain"
+                          onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                     
+                     <i class="fas fa-building text-blue-600 text-xl" style="display:none;"></i>
+                     
+                     <span class="font-bold text-gray-800">Panenku</span>
                 </div>
                 <button class="text-gray-600"><i class="fas fa-bars"></i></button>
             </div>
@@ -121,7 +143,6 @@
         }
 
         // --- CHART JS INITIALIZATION ---
-        // Script ini akan otomatis mencari Canvas ID yang sesuai di halaman view
         document.addEventListener('DOMContentLoaded', function() {
             // 1. CHART MONITORING
             const ctxHarvest = document.getElementById('harvestTrendsChart');
