@@ -114,9 +114,11 @@ class Master_data extends CI_Controller {
         $this->session->set_flashdata('success', 'Petani baru berhasil didaftarkan.');
         redirect('dinas/master_data?tab=petani');
     }
+
     public function hapus_petani($id) {
         $this->M_master->delete_petani($id);
         $this->session->set_flashdata('success', 'Akun petani dinonaktifkan.');
         redirect('dinas/master_data?tab=petani');
     }
+    
 }
